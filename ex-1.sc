@@ -1,20 +1,18 @@
-def examWords(args: List[String]): Unit = {
+def maxLengthWord(args: List[String]) = args.maxBy(_.length).length
+
+def minLengthWord(args: List[String]) = args.minBy(_.length).length
+
+def filterWordsByLength(args: List[String], length: Int) = args.filter(_.length.equals(length))
+
+def printLongerAndShorterWords(args: List[String]): Unit = {
   val filteredArgs = args.filter(_.length > 2)
   if (filteredArgs.nonEmpty) {
-    val maxWord = filteredArgs.maxBy(_.length)
-    val minWord = filteredArgs.minBy(_.length)
-
-    print("Longer word/s: ")
-    print(filteredArgs.filter(_.length.equals(maxWord.length)).mkString(", "))
-    print(s" with ${maxWord.length} letters")
-
-    println
+    val maxLength = maxLengthWord(filteredArgs)
+    val minLength = minLengthWord(filteredArgs)
     
-    print("Shorter word/s: ")
-    print(filteredArgs.filter(_.length.equals(minWord.length)).mkString(", "))
-    print(s" with ${minWord.length} letters")
+    println("Longer word/s: " + filterWordsByLength(filteredArgs, maxLength).mkString(", ") + s" with $maxLength letters")
+    println("Shorter word/s: " + filterWordsByLength(filteredArgs, minLength).mkString(", ") + s" with $minLength letters")
   }
 }
 
-
-examWords(List("zero","one","two","four", "as"))
+printLongerAndShorterWords(List("zero","one","two","four", "as"))
