@@ -5,37 +5,46 @@ object Application {
   def main(args: Array[String]): Unit = {
     val res = getShorterLonger(args.toList)
     println(
-      s"""Shorter word/s: ${res.shortestWords.words.mkString(" ")} with num letters ${res.shortestWords.length}
-      |\nLonger word/s: ${res.longestWords.words.mkString(" ")} with num letters ${res.longestWords.length}""".stripMargin )
+      s"""Shorter word/s: ${res.shortestWords.words.mkString(" ")} with num letters ${res.shortestWords.lengthOfWord}
+      |Longer word/s: ${res.longestWords.words.mkString(" ")} with num letters ${res.longestWords.lengthOfWord}""".stripMargin )
   }
 
   def getShorterLonger(wordlist: List[String]): (Result) = {
-
-    wordlist.foldLeft (Result.empty)  {
-      case (res @ Result(shortestWords, longestWords), currWord) =>
-
-        val long = currWord.length - longestWords.length match {
-          case m if m < 0 || currWord.length < WordsWithLength.minLength => WordsWithLength(longestWords.length, longestWords.words)
-          case m if m > 0 => WordsWithLength(currWord.length , currWord :: Nil)
-          case m if m == 0 => WordsWithLength(longestWords.length , longestWords.words :+ currWord)
+    wordlist.foldLeft (Result.empty) {
+      case (res@Result(shortestWords, longestWords), currWord) =>
+        currWord match {
+          case word if word.length < WordsWithLength.minLength => res
+          case other => Result(ShortestWords(shortestWords).appendOrPut(other), LongestWords(longestWords).appendOrPut(other))
         }
-        val short = currWord.length - shortestWords.length match {
-          case m if (m < 0 || shortestWords.words.isEmpty) && currWord.length >= WordsWithLength.minLength => WordsWithLength(currWord.length , currWord :: Nil)
-          case m if m > 0 || currWord.length < WordsWithLength.minLength => WordsWithLength(shortestWords.length, shortestWords.words)
-          case m if m == 0 => WordsWithLength(shortestWords.length, shortestWords.words :+ currWord)
-        }
-        Result(short , long)
     }
   }
 }
 
-case class WordsWithLength(length: Int, words: List[String]) {
-  def append(word: String): WordsWithLength = WordsWithLength(length, word :: words)
-  def put(word: String): WordsWithLength = WordsWithLength(word.length, word :: Nil)
+case class ShortestWords(words: WordsWithLength) {
+  def appendOrPut(word: String): WordsWithLength =
+    word.length match {
+      case shorterOf if shorterOf < words.lengthOfWord || words.isEmpty  => WordsWithLength(word :: Nil)
+      case longerOf if longerOf > words.lengthOfWord => words
+      case equal if equal == words.lengthOfWord => WordsWithLength(word :: words.words)
+    }
+}
+
+case class LongestWords(words: WordsWithLength) {
+  def appendOrPut(word: String): WordsWithLength =
+    word.length match {
+      case shorterOf if shorterOf < words.lengthOfWord => words
+      case longerOf if longerOf > words.lengthOfWord => WordsWithLength(word :: Nil)
+      case equal if equal == words.lengthOfWord => WordsWithLength(word :: words.words)
+    }
+}
+
+case class WordsWithLength(words: List[String]) {
+  def lengthOfWord : Int = words.headOption.getOrElse("").length
+  def isEmpty : Boolean = words.isEmpty
 }
 
 object WordsWithLength {
-  val empty = WordsWithLength(0, Nil)
+  val empty = WordsWithLength(Nil)
   val minLength = 3
 }
 
