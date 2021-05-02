@@ -3,13 +3,17 @@ package com.codergaden.ex1
 object Application {
 
   def main(args: Array[String]): Unit = {
-    val res = getShorterLonger(args.toList)
+    val res = ShortestAndLongerWords.getShorterLonger(args.toList)
     println(
       s"""Shorter word/s: ${res.shortestWords.words.mkString(" ")} with num letters ${res.shortestWords.lengthOfWord}
-      |Longer word/s: ${res.longestWords.words.mkString(" ")} with num letters ${res.longestWords.lengthOfWord}""".stripMargin )
-  }
 
-  def getShorterLonger(wordlist: List[String]): (Result) = {
+         |Longer word/s: ${res.longestWords.words.mkString(" ")} with num letters ${res.longestWords.lengthOfWord}""".stripMargin )
+  }
+}
+
+object ShortestAndLongerWords {
+
+  def getShorterLonger(wordlist: List[String]): Result = {
     wordlist.foldLeft (Result.empty) {
       case (res@Result(shortestWords, longestWords), currWord) =>
         currWord match {
