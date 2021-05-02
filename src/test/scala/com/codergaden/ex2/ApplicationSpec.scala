@@ -22,4 +22,8 @@ class ApplicationSpec extends AnyFlatSpec with TypeCheckedTripleEquals {
     Application.wordWithCount(("Giorgio")) shouldEqual "Giorgio -> (g, 2) (i, 2) (o, 2) (r, 1)"
   }
 
+  "Given a string to the wordCounter, the length of the string" should " equal to the sum of all the occurrences in the Map " in {
+    "Giorgio".length shouldEqual Application.wordCounter("Giorgio").foldLeft(0.0)(_+_._2)
+  }
+
 }
