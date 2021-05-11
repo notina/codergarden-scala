@@ -45,7 +45,10 @@ object Shop {
   case class Checkout(shoppingCart: ShoppingCart) {
     val offers = List(FruitOffer(Apple, 2), FruitOffer(Orange, 3))
     val cost = {
-      offers.foldRight(shoppingCart.totalCost)(_.applyOffer(_, shoppingCart.fruits))
+      offers.foldLeft(shoppingCart.totalCost) {
+        case (totalCost, offer) =>
+          offer.applyOffer(totalCost, shoppingCart.fruits)
+      }
     }
   }
 
