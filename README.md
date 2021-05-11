@@ -11,4 +11,4 @@ Write a program that, given a string as input,print the letter contained in the 
 i.e. Giorgio -> (g, 2), (i, 2), (o, 2) (r, 1)
 
 # Ex-3
-Solve the Scala_Developer_Interview_Excercise.pdf
+Solve the https://github.com/notina/codergarden-scala/blob/ex-3/Scala_Developer_Interview_Excercise.pdf
