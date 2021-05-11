@@ -9,3 +9,6 @@ Write a program that, given a list of strings can print the shortest word(s) (wi
 # Ex-2
 Write a program that, given a string as input,print the letter contained in the string + the number of times it appears in the word
 i.e. Giorgio -> (g, 2), (i, 2), (o, 2) (r, 1)
+
+# Ex-3
+Solve the Scala_Developer_Interview_Excercise.pdf
