@@ -34,7 +34,7 @@ object Shop {
 
   case class ShoppingCart(items: List[String]) {
     val validFruits = List(Apple, Orange, Banana)
-    val fruits: List[Fruit] = items.flatMap(fruitName => validFruits.find(_.name == fruitName))
+    val fruits: List[Fruit] = items.flatMap(itemName => validFruits.find(_.name == itemName))
     val totalCost = fruits.foldLeft(0D) {
       case (totalCost, fruit) =>
         totalCost + fruit.cost
