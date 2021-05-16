@@ -1,68 +1,22 @@
 package com.codergarden.ex3.step3
 
-import com.codergarden.ex3.step2.Shop.Checkout
-
 object Application {
 
   def main(args: Array[String]): Unit = {
-    val shoppingCart = Shop.ShoppingCart(args.toList)
-    println(s"SC Total cost: £${Shop.Checkout(shoppingCart).cost} " )
+
+
+    val shoppingCart = Shop.ShoppingCart(Shop.convert(args.toList))
+
+    val apple2x1 = Shop.OneFruitFree(Shop.Apple, 2)
+    val orange3x1 = Shop.OneFruitFree(Shop.Orange, 3)
+    val banana2x1 = Shop.OneFruitFree(Shop.Banana, 2)
+    val bananaAppleFreeBundle = Shop.cheapestBundleFree(List(Shop.Apple,Shop.Banana))
+
+    val offers = List(apple2x1, orange3x1, banana2x1, bananaAppleFreeBundle)
+
+    println(s"SC Total cost: £${Shop.Checkout(shoppingCart, offers).cost} " )
   }
 }
 
-object Shop {
-
-  trait Fruit {
-    val cost: Double
-    val name: String
-  }
-
-  object Apple extends Fruit {
-    val cost = 0.60
-    val name = "Apple"
-  }
-
-  object Orange extends Fruit {
-    val cost = 0.25
-    val name = "Orange"
-  }
-
-  object Banana extends Fruit {
-    val cost = 0.20
-    val name = "Banana"
-  }
-
-  case class ShoppingCart(items: List[String]) {
-    val validFruits = List(Apple, Orange, Banana)
-    val fruits: List[Fruit] = items.flatMap(itemName => validFruits.find(_.name == itemName))
-    val totalCost = fruits.foldLeft(0D) {
-      case (totalCost, fruit) =>
-        totalCost + fruit.cost
-    }
-  }
-
-  case class FruitOffer(fruit: Fruit, minimalFruitsForOffer: Int)  {
-    def applyOffer(cost: Double, fruits: List[Fruit]): Double = {
-      val numberOfFreeFruit = fruits.count(_ == fruit) / minimalFruitsForOffer
-      val discount = numberOfFreeFruit * fruit.cost
-      cost - discount
-    }
-  }
-
-  case class Checkout(shoppingCart: ShoppingCart) {
-
-    val offers = List(FruitOffer(Apple, 2), FruitOffer(Orange, 3), FruitOffer(Banana, 2))
-
-    val cost = {
-      offers.foldLeft(shoppingCart.totalCost) {
-        case (totalCost, offer) =>
-          offer.applyOffer(totalCost, shoppingCart.fruits)
-      }
-    }
-  }
-
-
-
-}
 
 
