@@ -28,12 +28,12 @@ object Shop {
   }
 
   case class ShoppingCart(fruits: List[Fruit]) {
-    val totalCost: BigDecimal = fruits.foldLeft(BigDecimal(0)) {
+    def totalCost: BigDecimal = fruits.foldLeft(BigDecimal(0)) {
       case (totalCost, fruit) =>
         totalCost + fruit.cost
     }
 
-    val totalCostByFruit: Map[Fruit, BigDecimal] = fruits.foldLeft(Map[Fruit, BigDecimal]()) {
+    def totalCostByFruit: Map[Fruit, BigDecimal] = fruits.foldLeft(Map[Fruit, BigDecimal]()) {
       case (fruitsMap, fruit) =>
         val subTotal: BigDecimal = fruitsMap.getOrElse(fruit, 0)
         fruitsMap + (fruit -> (subTotal + fruit.cost))
@@ -49,23 +49,18 @@ object Shop {
     }
   }
 
- case class cheapestBundleFree(fruitBundlesWithOffer: List[Fruit]) extends Offer  {
+ case class CheapestBundleFree(fruitBundlesWithOffer: List[Fruit]) extends Offer  {
     def applyTo(shoppingCart: ShoppingCart ): ShoppingCart = {
       val filteredBundles = shoppingCart.fruits.flatMap(fruit => fruitBundlesWithOffer.find(_ == fruit))
-      val cheapestFruitBundle = (ShoppingCart(filteredBundles).totalCostByFruit.minBy{ case(fruit, cost) => cost})._1
+      val cheapestFruitBundle: Fruit = ShoppingCart(filteredBundles).totalCostByFruit.minBy{ case(fruit, cost) => cost}._1
       ShoppingCart( shoppingCart.fruits.filter(_ != cheapestFruitBundle) )
     }
   }
 
-  case class Checkout(shoppingCart: ShoppingCart, offers: List[Offer]) {
-    val cost = {
+  def checkout(shoppingCart: ShoppingCart, offers: List[Offer]) = {
       offers.foldLeft(shoppingCart) {
         case (shoppingCart, offer) =>
           offer.applyTo(shoppingCart)
       }.totalCost
-    }
   }
-
-
-
 }
